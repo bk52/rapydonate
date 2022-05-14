@@ -1,0 +1,13 @@
+{
+  "name": "rapydonate",
+  "version": "1.0.0",
+  "description": "",
+  "author":"BK52",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev":"nodemon index.js"
+  },
+  "keywords": [],
+  "license": "ISC"
+}
