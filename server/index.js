@@ -27,6 +27,7 @@ const apiKeyMiddleware = require("./controller/auth/apiKeyCheck");
 
 const listCountries = require("./common/rapyd/listCountries");
 const CountriesModel = require("./models/Countries");
+const CreateCheckoutPage = require("./common/rapyd/checkout");
 
 const Init = async () => {
     try {
@@ -47,6 +48,20 @@ const Init = async () => {
             })
         })
         app.listen(PORT, (output) => { console.log("Server started port : " + PORT); });
+
+
+        const settingsCheckout = {
+            paymentAmount: 30,
+            paymentCurrency: "USD",
+            buyerCountry: "TR",
+            buyerCurrency: "TRY",
+            customerId: "abcdef",
+            remoteId: "abc",
+            ewalletId: "ewallet_31a1c7ba54e80f6798c296b5abb46fb3",
+            lang: "en"
+        }
+        const checkoutId = await CreateCheckoutPage(settingsCheckout);
+        console.log(checkoutId);
     }
     catch (e) {
         global.log(`Error : ${e}`);
