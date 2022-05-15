@@ -20,7 +20,13 @@ global.log = (msg) => { console.log(msg) }
 
 const authRouter = require("./routers/auth");
 const testRouter = require("./routers/test");
+const rapydCountriesRouter = require("./routers/countries");
+
 const authMiddleware = require("./controller/auth/verifyToken");
+const apiKeyMiddleware = require("./controller/auth/apiKeyCheck");
+
+const listCountries = require("./common/rapyd/listCountries");
+const CountriesModel = require("./models/Countries");
 
 const Init = async () => {
     try {
@@ -31,6 +37,8 @@ const Init = async () => {
         app.use(express.static(path.join(global.appRoot, "client/dist")));
         app.use("/api/auth", authRouter);
         app.use("/api/test", authMiddleware(PERMISSIONS.ADMIN), testRouter);
+        app.use("/api/countries", apiKeyMiddleware, rapydCountriesRouter);
+
         app.get('*', function (req, res) {
             res.sendFile(path.join(global.appRoot, "client/dist/index.html"), function (err) {
                 if (err) {
