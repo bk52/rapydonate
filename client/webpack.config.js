@@ -5,12 +5,11 @@ module.exports = {
     output: {
         path: path.join(__dirname, "/dist"),
         filename: "bundle.js",
-        chunkFilename: '[name].js'
     },
     mode: 'development',
     devServer: {
         port: 9200,
-        contentBase: path.join(__dirname, "/dist/"),
+        contentBase: path.join(__dirname, "/dist"),
         hot: true,
         watchContentBase: true,
         historyApiFallback: true,

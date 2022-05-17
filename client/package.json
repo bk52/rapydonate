@@ -10,13 +10,17 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.1",
     "axios": "^0.21.1",
+    "crypto-js": "^4.1.1",
+    "formik": "^2.2.9",
     "luxon": "^2.3.0",
     "nanoid": "^3.3.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-redux": "^8.0.1",
+    "react-router-dom": "^6.3.0",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^2.1.1"
+    "semantic-ui-react": "^2.1.1",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -29,7 +33,7 @@
     "babel-polyfill": "^6.26.0",
     "css-loader": "^5.0.1",
     "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^4.5.0",
+    "html-webpack-plugin": "^5.5.0",
     "style-loader": "^2.0.0",
     "webpack": "^5.10.2",
     "webpack-cli": "^4.5.0",
