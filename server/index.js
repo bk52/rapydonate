@@ -20,6 +20,7 @@ global.log = (msg) => { console.log(msg) }
 
 const authRouter = require("./routers/auth");
 const testRouter = require("./routers/test");
+const tokenRouter = require("./routers/token");
 const rapydCountriesRouter = require("./routers/countries");
 
 const authMiddleware = require("./controller/auth/verifyToken");
@@ -42,6 +43,7 @@ const Init = async () => {
         app.use(mongoSanitize({ replaceWith: "_" }));
         app.use(express.static(path.join(global.appRoot, "client/dist")));
         app.use("/api/auth", authRouter);
+        app.use("/api/token", tokenRouter);
         app.use("/api/test", authMiddleware(PERMISSIONS.ADMIN), testRouter);
         app.use("/api/countries", apiKeyMiddleware, rapydCountriesRouter);
 

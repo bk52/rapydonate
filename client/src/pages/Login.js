@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Button, Input, Form, Message } from 'semantic-ui-react';
 import { Navigate, useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
@@ -9,7 +9,7 @@ import { Encryption } from '../common/encryption';
 import { fetchSignIn } from "../redux/authSlice";
 
 const Login = () => {
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loginErr, setLoginErr] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -23,15 +23,12 @@ const Login = () => {
             email: Yup.string().required('Required'),
             password: Yup.string().required('Required'),
         }),
-        onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
-        },
         onSubmit: async (values) => {
             try {
                 const encPass = Encryption(values.password, "B2A58CC631F61199")
                 setLoading(true);
                 await dispatch(fetchSignIn({ username: values.email, password: encPass })).unwrap();
-                navigate("/home", { replace: true })
+                navigate("/projects", { replace: true })
             }
             catch (e) {
                 setLoginErr(e?.message);

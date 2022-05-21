@@ -1,44 +1,56 @@
-import React from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import RequireAuth from "../components/RequireAuth";
 import Login from "./Login";
+import Projects from './Projects';
+import ProjectsDetails from './ProjectDetails';
+import NotFound from "./NotFound";
+import Account from "./Account";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { signOut } from "../redux/authSlice";
+import { selectLogin, setLogin } from "../redux/authSlice";
 
-
+import NavBar from "../components/NavBar";
+import isLogin from "../common/isLogin";
+import SiteNav from "../components/SiteNav";
+import { fetchCountries } from '../redux/countriesSlice';
 
 export default function App() {
+  const login = useSelector(selectLogin);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setLogin(isLogin()))
+    if (isLogin()) {
+      const getCountries = async () => {
+        try {
+          await dispatch(fetchCountries()).unwrap();
+        }
+        catch (e) {
+          console.error(e)
+        }
+      }
+
+      getCountries();
+    }
+  }, [])
+
   return (
     <div className="App">
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/home" element={<RequireAuth><Home /></RequireAuth>} />
-      </Routes>
+      {
+        isLogin() ? <>
+          <NavBar />
+          <SiteNav />
+          <div className="content" style={{ top: isLogin() ? 'var(--navBar-height)' : '0px' }}>
+            <Routes>
+              <Route path="/account" element={<RequireAuth><Account /></RequireAuth>} />
+              <Route path="/projects" element={<RequireAuth><Projects /></RequireAuth>} />
+              <Route path="/projects/:id" element={<RequireAuth><ProjectsDetails /></RequireAuth>} />
+              <Route path='*' element={<NotFound />} />
+            </Routes>
+          </div>
+        </> : <Login />
+      }
     </div>
-  );
-}
-
-
-
-function Home() {
-  let navigate = useNavigate();
-  const dispatch = useDispatch();
-  const onLogoutClicked = (e) => {
-    dispatch(signOut())
-    navigate("/", { replace: true })
-  }
-  return (
-    <>
-      <main>
-        <h2>Who are we?</h2>
-        <p>
-          That feels like an existential question, don't you
-          think?
-        </p>
-      </main>
-      <button onClick={onLogoutClicked}>Logout</button>
-    </>
   );
 }

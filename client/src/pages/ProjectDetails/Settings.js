@@ -1,0 +1,215 @@
+import React, { useEffect, useState, forwardRef, useRef, useImperativeHandle } from "react";
+import { Button, Grid, Table, Input, Label, Checkbox, TextArea, Form, Message, Header, Icon, GridColumn } from 'semantic-ui-react';
+import { SliderPicker } from 'react-color';
+import DONATE_TYPES from "../../common/DonateTypes";
+
+
+const URL_DATA = [{
+    id: 1,
+    active: true,
+    name: 'Youtube',
+    url: 'https://www.youtube.com/watch?v=Ej8JF_dQCfc',
+    verified: true
+}]
+
+const DonationInfo = forwardRef((props, ref) => {
+    const [data, setData] = useState({ title: '', description: '', imageUrl: '', bgColor: '#fff' });
+
+    useEffect(() => { props.info && setData(props.info) }, [])
+
+    const onChange = ({ target }) => {
+        const { name, value } = target;
+        setData((prevstate) => ({ ...prevstate, [name]: value }))
+    }
+
+    useImperativeHandle(ref, () => ({ GetData() { return data } }));
+
+    return <>
+        <Header as='h3' textAlign='center'>Info</Header>
+        <Form style={{ padding: '8px', borderRadius: '4px' }} size={'large'}>
+            <Form.Field
+                control={Input}
+                label='Title'
+                id="title"
+                name="title"
+                placeholder=''
+                onChange={onChange}
+                value={data.title}
+            />
+            <Form.Field
+                control={TextArea}
+                label='Description'
+                id="description"
+                name="description"
+                placeholder=''
+                onChange={onChange}
+                value={data.description}
+            />
+            <Form.Field
+                control={Input}
+                label='Image Url'
+                id="imageUrl"
+                name="imageUrl"
+                placeholder=''
+                onChange={onChange}
+                value={data.imageUrl} />
+            <Form.Field
+                control={SliderPicker}
+                label='Background Color'
+                id="bgColor"
+                name="bgColor"
+                placeholder=''
+                onChangeComplete={(c) => onChange({ target: { name: 'bgColor', value: c.hex } })}
+                color={data.bgColor} />
+        </Form>
+    </>
+})
+
+const DonationTypes = forwardRef((props, ref) => {
+    const [data, setData] = useState([])
+    useEffect(() => { props.types && setData(props.types) }, [])
+
+    const onChange = (target, key) => {
+        const { name, value } = target;
+
+        if (name === "price" && value < 0) value = 0;
+
+        const newData = [...data];
+        const ind = newData.findIndex(x => x.id == key);
+        newData[ind][`${name}`] = value;
+        setData(newData)
+    }
+
+    useImperativeHandle(ref, () => ({ GetData() { return data } }));
+
+    return <>
+        <Header as='h3' textAlign='center'>Donation Types</Header>
+        <Table basic='very'>
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell textAlign='center'>Active</Table.HeaderCell>
+                    <Table.HeaderCell textAlign='center'>Icon</Table.HeaderCell>
+                    <Table.HeaderCell textAlign='left'>Title</Table.HeaderCell>
+                    <Table.HeaderCell textAlign='center'>Price</Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+                {
+                    data.map((item, index) =>
+                        <Table.Row key={item.id}>
+                            <Table.Cell textAlign='center'> <Checkbox name="active" toggle onChange={(e, data) => onChange({ name: data.name, value: data.checked }, item.id)} checked={item.active} /></Table.Cell>
+                            <Table.Cell textAlign='center'>{item.icon}</Table.Cell>
+                            <Table.Cell textAlign='left'>{item.title}</Table.Cell>
+                            <Table.Cell textAlign='center'>
+                                <Input onChange={(e) => onChange(e.target, item.id)} name="price" disabled={!item.active} type='number' min='0' value={item.price || 0} style={{ width: '60px', fontSize: '11px' }} >
+                                    <input />
+                                    <Label basic>$</Label>
+                                </Input>
+                            </Table.Cell>
+                        </Table.Row>)
+                }
+            </Table.Body>
+        </Table>
+    </>
+})
+
+const DonationURLs = forwardRef((props, ref) => {
+    const [data, setData] = useState([])
+    const [newURL, setNewURL] = useState(false);
+    const [newItem, setNewItem] = useState({ url: '', title: '', active: true })
+
+    const onNewItemChange = ({ target }) => {
+        const { name, value } = target;
+        setNewItem((prev) => ({ ...prev, [name]: value }))
+    }
+
+    const onNewItemAdd = (e) => {
+        setData((prev) => ([...prev, newItem]));
+        setNewItem({ url: '', title: '', active: true });
+        setNewURL(false);
+    }
+
+    const onRemoveUrl = (index) => {
+        const newData = [...data];
+        newData.splice(index, 1);
+        setData(newData);
+    }
+
+    useImperativeHandle(ref, () => ({ GetData() { return data } }));
+
+    useEffect(() => { props.urls && setData(props.urls) }, [])
+    return <>
+        <Header as='h3' textAlign='center'>Donation URLs</Header>
+        {newURL ? <>
+            <Grid columns='four'>
+                <Grid.Row>
+                    <Grid.Column width={4}>
+                        <Input value={newItem.title} onChange={onNewItemChange} fluid name='title' placeholder='Title' />
+                    </Grid.Column>
+                    <Grid.Column width={10}>
+                        <Input value={newItem.url} onChange={onNewItemChange} fluid name='url' placeholder='URL' />
+                    </Grid.Column>
+                    <Grid.Column width={2}>
+                        <div style={{ display: 'flex' }}>
+                            <Button onClick={onNewItemAdd} circular icon='check' />
+                            <Button onClick={(e) => { setNewItem({ url: '', title: '', active: true }); setNewURL(false) }} circular icon='times' />
+                        </div>
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
+        </> : <Button onClick={() => setNewURL(true)} color="blue" fluid><Icon name="plus" />New URL</Button>}
+
+        <Table basic='very'>
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell textAlign='center'>Active</Table.HeaderCell>
+                    <Table.HeaderCell textAlign='center'>Name</Table.HeaderCell>
+                    <Table.HeaderCell textAlign='left'>URL</Table.HeaderCell>
+                    <Table.HeaderCell textAlign='center'>Verified</Table.HeaderCell>
+                    <Table.HeaderCell textAlign='center'></Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+                {
+                    data.map((item, index) =>
+                        <Table.Row key={index}>
+                            <Table.Cell textAlign='center'> <Checkbox toggle checked={item.active} /></Table.Cell>
+                            <Table.Cell textAlign='center'>{item.title}</Table.Cell>
+                            <Table.Cell textAlign='left'>{item.url}</Table.Cell>
+                            <Table.Cell textAlign='center'>{item.verified ? <Icon name='check' /> : <Icon name='close' />}</Table.Cell>
+                            <Table.Cell textAlign='center'>
+                                <Button onClick={(e) => (onRemoveUrl(index))} circular icon='trash alternate' />
+                            </Table.Cell>
+                        </Table.Row>)
+                }
+            </Table.Body>
+        </Table>
+    </>
+})
+
+const Settings = ({ settings }) => {
+    const infoRef = useRef();
+    const typesRef = useRef();
+    const urlsRef = useRef();
+
+    const onSave = (e) => {
+        console.log(infoRef.current.GetData());
+        console.log(typesRef.current.GetData());
+        console.log(urlsRef.current.GetData());
+    }
+
+    useEffect(() => { }, [])
+    return <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ width: '500px', marginTop: '16px' }}>
+            <DonationInfo ref={infoRef} />
+            <DonationTypes ref={typesRef} types={DONATE_TYPES} />
+            <DonationURLs ref={urlsRef} />
+            <Button onClick={onSave} color="green" fluid style={{ marginBottom: '30px' }}>Save</Button>
+        </div>
+    </div >
+
+}
+
+export default Settings;

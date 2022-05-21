@@ -1,33 +1,18 @@
 import React from "react";
-// import {
-//     decrement,
-//     increment,
-//     selectCount
-// } from './redux/counterSlice';
-// import { useSelector, useDispatch } from 'react-redux';
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+import { BrowserRouter } from "react-router-dom";
+import { SnackbarProvider } from 'notistack';
 import AppPages from "./pages";
 
 const App = () => {
-    return <AppPages />
+    return <SnackbarProvider maxSnack={3}>
+        <Provider store={store}>
+            <BrowserRouter>
+                <AppPages />
+            </BrowserRouter>
+        </Provider>
+    </SnackbarProvider>
 }
 
 export default App;
-// export default function App() {
-//     const count = useSelector(selectCount);
-//     const dispatch = useDispatch();
-//     return <>
-//         Counter : {count}
-//         <button
-//             aria-label="Decrement value"
-//             onClick={() => dispatch(decrement())}
-//         >
-//             -
-//         </button>
-//         <button
-//             aria-label="Increment value"
-//             onClick={() => dispatch(increment())}
-//         >
-//             +
-//         </button>
-//     </>
-// }
