@@ -20,7 +20,9 @@ global.log = (msg) => { console.log(msg) }
 
 const authRouter = require("./routers/auth");
 const testRouter = require("./routers/test");
+const accountRouter = require("./routers/account");
 const tokenRouter = require("./routers/token");
+const projectRouter = require("./routers/projects");
 const rapydCountriesRouter = require("./routers/countries");
 
 const authMiddleware = require("./controller/auth/verifyToken");
@@ -45,6 +47,8 @@ const Init = async () => {
         app.use("/api/auth", authRouter);
         app.use("/api/token", tokenRouter);
         app.use("/api/test", authMiddleware(PERMISSIONS.ADMIN), testRouter);
+        app.use("/api/projects", authMiddleware(PERMISSIONS.ADMIN), projectRouter);
+        app.use("/api/account", authMiddleware(PERMISSIONS.ADMIN), accountRouter);
         app.use("/api/countries", apiKeyMiddleware, rapydCountriesRouter);
 
         app.get('*', function (req, res) {

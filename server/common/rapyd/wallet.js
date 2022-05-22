@@ -1,43 +1,29 @@
 const MakeRequest = require('./utilities').makeRequest;
 
-const CreatePerson = () => {
+const CreatePerson = (firstName = "", lastName = "", email = "", ewalletRefId = "", phone = "") => {
     return {
-        first_name: "",
-        last_name: "",
-        email: "",
-        ewallet_reference_id: "",
-        phone_number: "",
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        ewallet_reference_id: ewalletRefId,
+        phone_number: phone,
         type: "person",
     }
 }
 
-const CreateContact = () => {
+const CreateContact = (name = "", adress = "", city = "", state = "", country = "", zip = "", date_of_birth = "") => {
     return {
-        phone_number: "",
-        email: "",
-        first_name: "",
-        last_name: "",
-        mothers_name: "",
         contact_type: "personal",
         address: {
-            name: "",
-            line_1: "",
-            line_2: "",
-            line_3: "",
-            city: "",
-            state: "",
-            country: "",
-            zip: "",
-            phone_number: "",
+            name: name,
+            line_1: adress,
+            city: city,
+            state: state,
+            country: country,
+            zip: zip,
             metadata: {},
-            canton: "",
-            district: ""
         },
-        identification_type: "",
-        identification_number: "",
-        date_of_birth: "",
-        country: "",
-        nationality: "",
+        date_of_birth: date_of_birth,
         metadata: {
             "merchant_defined": true
         }
