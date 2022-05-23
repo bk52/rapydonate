@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import isLogin from "../common/isLogin";
 import { Encryption } from '../common/encryption';
 import { fetchSignIn } from "../redux/authSlice";
+import Logo from "../assets/img/heartOn.png"
 
 const Login = () => {
     const navigate = useNavigate();
@@ -38,8 +39,12 @@ const Login = () => {
     });
 
     return (
-        isLogin() ? <Navigate to="/home" replace={true} /> : <>
-            <Form onSubmit={formik.handleSubmit} size={'large'} error loading={loading}>
+        isLogin() ? <Navigate to="/home" replace={true} /> : <div className='loginPage'>
+            <div className='logo'>
+                <img src={Logo} />
+            </div>
+            <h2>Rapydonate</h2>
+            <Form style={{ 'marginTop': '16px' }} onSubmit={formik.handleSubmit} size={'large'} error loading={loading}>
                 {loginErr ? (<div><Message error content={loginErr} /></div>) : null}
                 <Form.Field
                     control={Input}
@@ -62,9 +67,9 @@ const Login = () => {
                     value={formik.values.password}
                 />
                 {formik.touched.password && formik.errors.password ? (<div><Message error content={formik.errors.password} /></div>) : null}
-                <Form.Field control={Button} type="submit">Sign In</Form.Field>
+                <Form.Field control={Button} fluid color='blue' type="submit">Sign In</Form.Field>
             </Form>
-        </>
+        </div>
     );
 }
 

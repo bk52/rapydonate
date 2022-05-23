@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import RequireAuth from "../components/RequireAuth";
 import Login from "./Login";
 import Projects from './Projects';
@@ -43,6 +43,7 @@ export default function App() {
           <SiteNav />
           <div className="siteContent" style={{ top: isLogin() ? 'var(--navBar-height)' : '0px' }}>
             <Routes>
+              <Route path="/" element={<Navigate to="/projects" replace />} />
               <Route path="/account" element={<RequireAuth><Account /></RequireAuth>} />
               <Route path="/projects" element={<RequireAuth><Projects /></RequireAuth>} />
               <Route path="/projects/:id" element={<RequireAuth><ProjectsDetails /></RequireAuth>} />
