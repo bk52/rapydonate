@@ -1,21 +1,16 @@
 import React, { useEffect, useState, forwardRef, useRef, useImperativeHandle } from "react";
 import { Button, Grid, Table, Input, Label, Checkbox, TextArea, Form, Message, Header, Icon, GridColumn } from 'semantic-ui-react';
 import { SliderPicker } from 'react-color';
+import { useSnackbar } from 'notistack';
 import DONATE_TYPES from "../../common/DonateTypes";
-
-
-const URL_DATA = [{
-    id: 1,
-    active: true,
-    name: 'Youtube',
-    url: 'https://www.youtube.com/watch?v=Ej8JF_dQCfc',
-    verified: true
-}]
+import { UpdateProject } from "../../api/projects";
 
 const DonationInfo = forwardRef((props, ref) => {
-    const [data, setData] = useState({ title: '', description: '', imageUrl: '', bgColor: '#fff' });
+    const [data, setData] = useState({ title: '', description: '', imageURL: '', bgColor: '#fff' });
 
-    useEffect(() => { props.info && setData(props.info) }, [])
+    useEffect(() => {
+        props.info && props.info.title && setData(props.info)
+    }, [props.info])
 
     const onChange = ({ target }) => {
         const { name, value } = target;
@@ -48,11 +43,11 @@ const DonationInfo = forwardRef((props, ref) => {
             <Form.Field
                 control={Input}
                 label='Image Url'
-                id="imageUrl"
-                name="imageUrl"
+                id="imageURL"
+                name="imageURL"
                 placeholder=''
                 onChange={onChange}
-                value={data.imageUrl} />
+                value={data.imageURL} />
             <Form.Field
                 control={SliderPicker}
                 label='Background Color'
@@ -67,15 +62,17 @@ const DonationInfo = forwardRef((props, ref) => {
 
 const DonationTypes = forwardRef((props, ref) => {
     const [data, setData] = useState([])
-    useEffect(() => { props.types && setData(props.types) }, [])
+    useEffect(() => {
+        props.types && props.types.length > 0 ? setData(props.types) : setData(DONATE_TYPES)
+    }, [props.types])
 
-    const onChange = (target, key) => {
+    const onChange = (target, ind) => {
         const { name, value } = target;
 
         if (name === "price" && value < 0) value = 0;
-
+        console.log(ind)
         const newData = [...data];
-        const ind = newData.findIndex(x => x.id == key);
+        //const ind = newData.findIndex(x => x.id == key);
         newData[ind][`${name}`] = value;
         setData(newData)
     }
@@ -97,12 +94,12 @@ const DonationTypes = forwardRef((props, ref) => {
             <Table.Body>
                 {
                     data.map((item, index) =>
-                        <Table.Row key={item.id}>
-                            <Table.Cell textAlign='center'> <Checkbox name="active" toggle onChange={(e, data) => onChange({ name: data.name, value: data.checked }, item.id)} checked={item.active} /></Table.Cell>
+                        <Table.Row key={index}>
+                            <Table.Cell textAlign='center'> <Checkbox name="active" toggle onChange={(e, data) => onChange({ name: data.name, value: data.checked }, index)} checked={item.active} /></Table.Cell>
                             <Table.Cell textAlign='center'>{item.icon}</Table.Cell>
                             <Table.Cell textAlign='left'>{item.title}</Table.Cell>
                             <Table.Cell textAlign='center'>
-                                <Input onChange={(e) => onChange(e.target, item.id)} name="price" disabled={!item.active} type='number' min='0' value={item.price || 0} style={{ width: '60px', fontSize: '11px' }} >
+                                <Input onChange={(e) => onChange(e.target, index)} name="price" disabled={!item.active} type='number' min='0' value={item.price || 0} style={{ width: '60px', fontSize: '11px' }} >
                                     <input />
                                     <Label basic>$</Label>
                                 </Input>
@@ -136,9 +133,15 @@ const DonationURLs = forwardRef((props, ref) => {
         setData(newData);
     }
 
+    const onActiveChanged = (index) => {
+        const newData = [...data];
+        newData[index].active = !newData[index].active
+        setData(newData);
+    }
+
     useImperativeHandle(ref, () => ({ GetData() { return data } }));
 
-    useEffect(() => { props.urls && setData(props.urls) }, [])
+    useEffect(() => { props.urls && setData(props.urls) }, [props.urls])
     return <>
         <Header as='h3' textAlign='center'>Donation URLs</Header>
         {newURL ? <>
@@ -175,7 +178,7 @@ const DonationURLs = forwardRef((props, ref) => {
                 {
                     data.map((item, index) =>
                         <Table.Row key={index}>
-                            <Table.Cell textAlign='center'> <Checkbox toggle checked={item.active} /></Table.Cell>
+                            <Table.Cell textAlign='center'> <Checkbox toggle checked={item.active} onChange={(e) => onActiveChanged(index)} /></Table.Cell>
                             <Table.Cell textAlign='center'>{item.title}</Table.Cell>
                             <Table.Cell textAlign='left'>{item.url}</Table.Cell>
                             <Table.Cell textAlign='center'>{item.verified ? <Icon name='check' /> : <Icon name='close' />}</Table.Cell>
@@ -189,23 +192,43 @@ const DonationURLs = forwardRef((props, ref) => {
     </>
 })
 
-const Settings = ({ settings }) => {
+const Settings = ({ projectId, settings }) => {
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const infoRef = useRef();
     const typesRef = useRef();
     const urlsRef = useRef();
+    const [info, setInfo] = useState({});
+    const [donTypes, setDonTypes] = useState([]);
+    const [urlList, setUrlList] = useState([]);
 
-    const onSave = (e) => {
-        console.log(infoRef.current.GetData());
-        console.log(typesRef.current.GetData());
-        console.log(urlsRef.current.GetData());
+    const onSave = async (e) => {
+        try {
+            const response = await UpdateProject(
+                projectId,
+                infoRef.current.GetData(),
+                typesRef.current.GetData(),
+                urlsRef.current.GetData()
+            );
+            enqueueSnackbar('Saved', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'success', autoHideDuration: 2000 });
+        }
+        catch (err) {
+            console.error(err)
+            enqueueSnackbar('Error occured', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'error', autoHideDuration: 2000 });
+        }
     }
 
-    useEffect(() => { }, [])
+    useEffect(() => {
+        const { title, description, imageURL, bgColor } = settings;
+        setInfo({ title, description, imageURL, bgColor });
+        setDonTypes(settings?.donationTypes);
+        setUrlList(settings?.urls);
+    }, [settings])
+
     return <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ width: '500px', marginTop: '16px' }}>
-            <DonationInfo ref={infoRef} />
-            <DonationTypes ref={typesRef} types={DONATE_TYPES} />
-            <DonationURLs ref={urlsRef} />
+            <DonationInfo ref={infoRef} info={info} />
+            <DonationTypes ref={typesRef} types={donTypes} />
+            <DonationURLs ref={urlsRef} urls={urlList} />
             <Button onClick={onSave} color="green" fluid style={{ marginBottom: '30px' }}>Save</Button>
         </div>
     </div >

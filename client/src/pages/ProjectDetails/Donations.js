@@ -105,7 +105,7 @@ const Donations = ({ settings }) => {
                 <Statistic.Label>Total Donation</Statistic.Label>
             </Statistic>
         </div>
-        <div style={{ flex: '2' }}>
+        <div style={{ flex: '2', paddingTop: '8px' }}>
             <Table basic='very'>
                 <Table.Header>
                     <Table.Row>

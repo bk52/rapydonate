@@ -6,7 +6,21 @@ const donationTypesSchema = new Schema({
     icon: String,
     title: String,
     price: Number,
+    donateType: String
 })
+
+const urlSchema = new Schema(
+    {
+        active: { type: Boolean, default: true },
+        title: String,
+        url: String,
+        verified: { type: Boolean, default: true },
+    },
+    {
+        timestamps: { createdAt: "createdDate", updatedAt: "updatedDate" },
+        toJSON: { virtuals: true },
+    }
+)
 
 const projectsSchema = new Schema(
     {
@@ -15,10 +29,10 @@ const projectsSchema = new Schema(
         title: String,
         description: String,
         status: { type: String, default: 'active' },
-        imageURL: String,
-        bgColor: String,
+        imageURL: { type: String, default: '' },
+        bgColor: { type: String, default: '#fff' },
         donationTypes: [donationTypesSchema],
-
+        urls: [urlSchema]
     },
     {
         timestamps: { createdAt: "createdDate", updatedAt: "updatedDate" },
@@ -36,9 +50,24 @@ projectsSchema.statics.getUserProjects = function (userId) {
 
 projectsSchema.statics.createProject = async function (item) {
     try {
-        let newItem = new projectsModel(item);
-        const saveItem = await newItem.save();
-        return saveItem
+        if (item.projectId) {
+            let p = await this.findOne({ id: item.projectId });
+            if (p) {
+                p.title = item.projectInfo.title;
+                p.description = item.projectInfo.description;
+                p.imageURL = item.projectInfo.imageURL;
+                p.bgColor = item.projectInfo.bgColor;
+                p.donationTypes = item.projectTypes;
+                p.urls = item.projectUrls;
+                p.save();
+            }
+            return p?._id;
+        }
+        else {
+            let newItem = new projectsModel(item.projectInfo);
+            const saveItem = await newItem.save();
+            return saveItem
+        }
     }
     catch (e) {
         global.log(e);

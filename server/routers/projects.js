@@ -3,7 +3,6 @@ const router = express.Router();
 const { ReasonPhrases, StatusCodes } = require("http-status-codes");
 const UserModel = require(`${global.serverRoot}/models/Users`);
 const ProjectModel = require(`${global.serverRoot}/models/Projects`);
-const UrlModel = require(`${global.serverRoot}/models/Urls`);
 const { CreatePerson, CreateContact, CreateWallet, DeleteWallet } = require(`${global.serverRoot}/common/rapyd/wallet`);
 const { nanoid } = require('nanoid');
 
@@ -14,12 +13,18 @@ router.route('/')
     .get(async function (req, res) {
         try {
             const { id } = req.headers.payload;
+            const { projectId } = req.query;
             if (!id)
                 return res.status(StatusCodes.BAD_REQUEST).json({ "message": "You need to fill personel info in Account" });
 
-            const projects = await ProjectModel.getUserProjects(id);
-            return res.status(StatusCodes.OK).json({ "message": ReasonPhrases.OK, "data": projects });
-
+            if (projectId) {
+                const project = await ProjectModel.getProject(projectId);
+                return res.status(StatusCodes.OK).json({ "message": ReasonPhrases.OK, "data": project });
+            }
+            else {
+                const projects = await ProjectModel.getUserProjects(id);
+                return res.status(StatusCodes.OK).json({ "message": ReasonPhrases.OK, "data": projects });
+            }
         }
         catch (e) {
             global.log(e);
@@ -29,34 +34,43 @@ router.route('/')
     .post(async function (req, res) {
         try {
             const { id } = req.headers.payload;
-            const { title, description } = req.body;
-            if (!(id && title))
+            const { projectId, projectInfo, projectTypes, projectUrls } = req.body;
+            if (!id)
                 return res.status(StatusCodes.BAD_REQUEST).json({ "message": ReasonPhrases.BAD_REQUEST });
 
             const userInfo = await UserModel.getUserById(id);
             if (!userInfo.contact)
                 return res.status(StatusCodes.BAD_REQUEST).json({ "message": "You need to fill personel info in Account" });
 
-            // Create Wallet for Project
-            const { first_name, last_name, email, phone_code, phone_number } = userInfo.contact;
-            const ewallet_reference_id = `${first_name}-${last_name}-${nanoid(10)}`;
-            const { line_1, city, state, zip, country, date_of_birth } = userInfo.contact;
-            const PersonInfo = CreatePerson(first_name, last_name, email, ewallet_reference_id, ``);
-            const ContactInfo = CreateContact(first_name, line_1, city, state, country, zip, date_of_birth);
-            const walletId = await CreateWallet(PersonInfo, ContactInfo)
+            if (projectId) {
+                const response = await ProjectModel.createProject({ projectId, projectInfo, projectTypes, projectUrls })
+                return res.status(StatusCodes.OK).json({ "message": ReasonPhrases.OK, data: response });
+            }
+            else {
+                // Create Wallet for Project
+                const { first_name, last_name, email, phone_code, phone_number } = userInfo.contact;
+                const ewallet_reference_id = `${first_name}-${last_name}-${nanoid(10)}`;
+                const { line_1, city, state, zip, country, date_of_birth } = userInfo.contact;
+                const PersonInfo = CreatePerson(first_name, last_name, email, ewallet_reference_id, ``);
+                const ContactInfo = CreateContact(first_name, line_1, city, state, country, zip, date_of_birth);
+                const walletId = await CreateWallet(PersonInfo, ContactInfo)
 
-            if (!walletId)
-                return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ "message": "Could not create wallet" });
+                if (!walletId)
+                    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ "message": "Could not create wallet" });
 
-            // Create Project
-            const createdProject = await ProjectModel.createProject({
-                userId: id,
-                ewalletId: walletId,
-                title: title,
-                description: description
-            })
+                // Create Project
+                const { title, description } = projectInfo;
+                const createdProject = await ProjectModel.createProject({
+                    projectInfo: {
+                        userId: id,
+                        ewalletId: walletId,
+                        title: title,
+                        description: description
+                    }
+                })
 
-            return res.status(StatusCodes.OK).json({ "message": createdProject.id });
+                return res.status(StatusCodes.OK).json({ "message": createdProject.id });
+            }
         }
         catch (e) {
             global.log(e);
@@ -76,7 +90,6 @@ router.route('/')
                 return res.status(StatusCodes.BAD_REQUEST).json({ "message": "Project not found" });
 
             await ProjectModel.deleteProject(projectId);
-            await UrlModel.deleteProject(projectId);
             await DeleteWallet(project.ewalletId);
 
             return res.status(StatusCodes.OK).json({ "message": ReasonPhrases.OK, "data": projectId });
