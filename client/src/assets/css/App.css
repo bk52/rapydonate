@@ -39,7 +39,7 @@ body{
     font-size: 14px;
 }
 
-.content{
+.siteContent{
     position: absolute;
     width: calc(100% - 16px);
     height: calc(100% - (var(--navBar-height) + var(--menu-height)));

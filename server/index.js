@@ -37,6 +37,8 @@ const { PAYMENT_METHODS } = require("./common/rapyd/enums");
 const GetIdentities = require("./common/rapyd/identities");
 const { Decryption } = require("./common/Encryption");
 
+const projectsModel = require("./models/Projects");
+
 const Init = async () => {
     try {
         await mongoose.connect(connStr, connParams)
@@ -60,6 +62,15 @@ const Init = async () => {
         })
         app.listen(PORT, (output) => { console.log("Server started port : " + PORT); });
 
+        // const res = await projectsModel.createProject({
+        //     userId: "userId",
+        //     ewalletId: "ewallet",
+        //     name: "name",
+        //     description: "description",
+        //     imageURL: "imageURL",
+        //     bgColor: "bgColor",
+        // })
+        // console.log(res);
 
         // const res = Decryption("J4c6jaWEHTeEtSfEa0y5jw==", process.env.AES_DB_KEY);
         // console.log(res);

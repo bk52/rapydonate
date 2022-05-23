@@ -54,7 +54,7 @@ const CreateWallet = async (person, contact) => {
 const DeleteWallet = async (walletId) => {
     let res = false;
     try {
-        const result = await MakeRequest('DELETE', `/v1/user/${walletId}`, {});
+        const result = await MakeRequest('DELETE', `/v1/user/${walletId}`);
         if (result?.body?.status?.status === "SUCCESS")
             res = true;
     }

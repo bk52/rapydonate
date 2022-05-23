@@ -41,7 +41,7 @@ export default function App() {
         isLogin() ? <>
           <NavBar />
           <SiteNav />
-          <div className="content" style={{ top: isLogin() ? 'var(--navBar-height)' : '0px' }}>
+          <div className="siteContent" style={{ top: isLogin() ? 'var(--navBar-height)' : '0px' }}>
             <Routes>
               <Route path="/account" element={<RequireAuth><Account /></RequireAuth>} />
               <Route path="/projects" element={<RequireAuth><Projects /></RequireAuth>} />

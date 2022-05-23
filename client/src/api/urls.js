@@ -6,7 +6,8 @@ const URL = {
   URLAPI: "/urls",
   LOGAPI: "/trackLogs",
   COUNTRIES: '/countries',
-  ACCOUNT: '/account'
+  ACCOUNT: '/account',
+  PROJECT: '/projects'
 };
 
 export default URL;
