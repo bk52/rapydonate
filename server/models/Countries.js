@@ -19,7 +19,7 @@ const countriesSchema = new Schema(
 );
 
 countriesSchema.statics.getCountries = function () {
-    return this.find({}, 'id name iso_alpha2 phone_code').lean();
+    return this.find({}, 'id name iso_alpha2 phone_code currency_code').lean();
 };
 
 countriesSchema.statics.setCountries = function (data) {

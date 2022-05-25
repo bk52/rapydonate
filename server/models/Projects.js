@@ -79,6 +79,10 @@ projectsSchema.statics.deleteProject = function (_id) {
     return this.deleteOne({ _id }).lean();
 }
 
+projectsSchema.statics.getProjectByUrl = function (url) {
+    return this.findOne({ "urls.url": url }, 'title description imageURL donationTypes').lean();
+}
+
 const projectsModel = mongoose.model("projects", projectsSchema);
 module.exports = projectsModel;
 

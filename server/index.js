@@ -23,7 +23,9 @@ const testRouter = require("./routers/test");
 const accountRouter = require("./routers/account");
 const tokenRouter = require("./routers/token");
 const projectRouter = require("./routers/projects");
+const urlRouter = require("./routers/urls");
 const rapydCountriesRouter = require("./routers/countries");
+const paymentMethodsRouter = require("./routers/paymentMethods");
 
 const authMiddleware = require("./controller/auth/verifyToken");
 const apiKeyMiddleware = require("./controller/auth/apiKeyCheck");
@@ -36,7 +38,6 @@ const { CreatePerson, CreateContact, CreateWallet, DeleteWallet } = require("./c
 const { PAYMENT_METHODS } = require("./common/rapyd/enums");
 const GetIdentities = require("./common/rapyd/identities");
 const { Decryption } = require("./common/Encryption");
-
 const projectsModel = require("./models/Projects");
 
 const Init = async () => {
@@ -52,6 +53,8 @@ const Init = async () => {
         app.use("/api/projects", authMiddleware(PERMISSIONS.ADMIN), projectRouter);
         app.use("/api/account", authMiddleware(PERMISSIONS.ADMIN), accountRouter);
         app.use("/api/countries", apiKeyMiddleware, rapydCountriesRouter);
+        app.use("/api/paymentmethods", apiKeyMiddleware, paymentMethodsRouter);
+        app.use("/api/urls", apiKeyMiddleware, urlRouter);
 
         app.get('*', function (req, res) {
             res.sendFile(path.join(global.appRoot, "client/dist/index.html"), function (err) {

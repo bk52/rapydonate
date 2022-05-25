@@ -14,7 +14,4 @@ const apiKeyCheck = (req, res, next) => {
     }
 }
 
-
 module.exports = apiKeyCheck;
-
-
