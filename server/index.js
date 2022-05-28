@@ -24,6 +24,7 @@ const accountRouter = require("./routers/account");
 const tokenRouter = require("./routers/token");
 const projectRouter = require("./routers/projects");
 const urlRouter = require("./routers/urls");
+const checkoutRouter = require("./routers/checkout");
 const rapydCountriesRouter = require("./routers/countries");
 const paymentMethodsRouter = require("./routers/paymentMethods");
 
@@ -53,6 +54,7 @@ const Init = async () => {
         app.use("/api/projects", authMiddleware(PERMISSIONS.ADMIN), projectRouter);
         app.use("/api/account", authMiddleware(PERMISSIONS.ADMIN), accountRouter);
         app.use("/api/countries", apiKeyMiddleware, rapydCountriesRouter);
+        app.use("/api/checkout", apiKeyMiddleware, checkoutRouter);
         app.use("/api/paymentmethods", apiKeyMiddleware, paymentMethodsRouter);
         app.use("/api/urls", apiKeyMiddleware, urlRouter);
 

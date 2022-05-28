@@ -1,7 +1,7 @@
 const MakeRequest = require('./utilities').makeRequest;
 const GetExpiration = require('../Expiration');
 
-const CreateCheckoutPage = async ({ paymentAmount, paymentCurrency, buyerCountry, buyerCurrency, customerId, remoteId, ewalletId, lang = "en" }) => {
+const CreateCheckoutPage = async ({ paymentAmount, paymentCurrency, buyerCountry, buyerCurrency, customerId, ewalletId, remoteId = "", paymentMethod = "card", lang = "en" }) => {
     let checkoutId = null;
 
     try {
@@ -20,7 +20,7 @@ const CreateCheckoutPage = async ({ paymentAmount, paymentCurrency, buyerCountry
                 "remoteId": remoteId
             },
             "payment_method_type_categories": [
-                "card"
+                paymentMethod
             ],
             "expiration": GetExpiration(1),
             "payment_method_types_exclude": [],
