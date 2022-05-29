@@ -43,15 +43,16 @@ const Account = () => {
         }),
         onSubmit: async (values) => {
             try {
-                setLoading(true);
-                const accountInfo = { ...values };
-                accountInfo.phone_code = COUNTRIES.filter(x => x.id == accountInfo.phone_code_by_id)[0].phone_code;
-                accountInfo.country = COUNTRIES.filter(x => x.id == accountInfo.country_by_id)[0].iso_alpha2;
-                const birthDate = new Date(accountInfo.date_of_birth);
-                accountInfo.date_of_birth = `${birthDate.getMonth() + 1}/${birthDate.getDate()}/${birthDate.getFullYear()}`
-                await SetAccountSettings(accountInfo);
-                enqueueSnackbar('Account saved', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'success', autoHideDuration: 2000 });
-                setLoading(false);
+                enqueueSnackbar('Not allowed in demo version.', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'warning', autoHideDuration: 2000 });
+                // setLoading(true);
+                // const accountInfo = { ...values };
+                // accountInfo.phone_code_by_id = COUNTRIES.filter(x => x.id == accountInfo.phone_code_by_id)[0].id;
+                // accountInfo.country = COUNTRIES.filter(x => x.id == accountInfo.country_by_id)[0].iso_alpha2;
+                // const birthDate = new Date(accountInfo.date_of_birth);
+                // accountInfo.date_of_birth = `${birthDate.getMonth() + 1}/${birthDate.getDate()}/${birthDate.getFullYear()}`
+                // await SetAccountSettings(accountInfo);
+                // enqueueSnackbar('Account saved', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'success', autoHideDuration: 2000 });
+                // setLoading(false);
             }
             catch (e) {
                 enqueueSnackbar('Error occured', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'error', autoHideDuration: 2000 });
@@ -69,6 +70,7 @@ const Account = () => {
                 const birthDate = data.date_of_birth && new Date(data.date_of_birth);
                 const birthDateStr = `${birthDate.getFullYear()}-${(birthDate.getMonth() + 1).toString().padStart(2, '0')}-${(birthDate.getDate()).toString().padStart(2, '0')}`
                 delete data.date_of_birth;
+                delete data.phone_code;
                 personelForm.setFieldValue('date_of_birth', birthDateStr)
                 Object.entries(data).forEach(([key, value]) => personelForm.setFieldValue(key, value))
             }
@@ -79,9 +81,6 @@ const Account = () => {
         }
         GetFormData();
     }, [])
-
-
-    // const phoneCodeOptions = COUNTRIES.map((item) => ({ key: item.id, value: item.phone_code, text: item.name }))
 
     return <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ width: '500px', marginTop: '16px' }}>

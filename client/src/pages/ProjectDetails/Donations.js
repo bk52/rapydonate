@@ -78,8 +78,8 @@ const Donations = ({ donateList }) => {
 
     const onPieEnter = (_, index) => { setActiveIndex(index) };
 
-    return <div style={{ display: 'flex', height: 'calc(100% - 43px)' }}>
-        <div style={{ display: 'flex', flex: '1', flexDirection: 'column', height: '100%', paddingBottom: '32px' }}>
+    return <div className="donationPage">
+        <div className="donationGraph">
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart width={500} height={500}>
                     <Pie
@@ -106,7 +106,7 @@ const Donations = ({ donateList }) => {
                 <Statistic.Label>Total Donation</Statistic.Label>
             </Statistic>
         </div>
-        <div style={{ flex: '2', paddingTop: '8px' }}>
+        <div className="donationTable">
             {
                 donateList ? <Table basic='very'>
                     <Table.Header>

@@ -203,13 +203,14 @@ const Settings = ({ projectId, settings }) => {
 
     const onSave = async (e) => {
         try {
-            const response = await UpdateProject(
-                projectId,
-                infoRef.current.GetData(),
-                typesRef.current.GetData(),
-                urlsRef.current.GetData()
-            );
-            enqueueSnackbar('Saved', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'success', autoHideDuration: 2000 });
+            enqueueSnackbar('Not allowed in demo version.', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'warning', autoHideDuration: 2000 });
+            // const response = await UpdateProject(
+            //     projectId,
+            //     infoRef.current.GetData(),
+            //     typesRef.current.GetData(),
+            //     urlsRef.current.GetData()
+            // );
+            // enqueueSnackbar('Saved', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'success', autoHideDuration: 2000 });
         }
         catch (err) {
             console.error(err)
@@ -225,7 +226,7 @@ const Settings = ({ projectId, settings }) => {
     }, [settings])
 
     return <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ width: '500px', marginTop: '16px' }}>
+        <div className="projectSettingsPage">
             <DonationInfo ref={infoRef} info={info} />
             <DonationTypes ref={typesRef} types={donTypes} />
             <DonationURLs ref={urlsRef} urls={urlList} />

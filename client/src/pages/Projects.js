@@ -106,9 +106,10 @@ const Projects = () => {
     const onSave = async (title, description) => {
         setLoading(true);
         try {
-            setModalOpen(false)
-            await CreateProject(title, description);
-            GetData();
+            enqueueSnackbar('Not allowed in demo version.', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'warning', autoHideDuration: 2000 });
+            // setModalOpen(false)
+            // await CreateProject(title, description);
+            // GetData();
         }
         catch (e) {
             enqueueSnackbar('Error occured', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'error', autoHideDuration: 2000 });
@@ -120,8 +121,9 @@ const Projects = () => {
     const onRemoveProject = async (projectId) => {
         setLoading(true);
         try {
-            await DeleteProject(projectId);
-            GetData();
+            enqueueSnackbar('Not allowed in demo version.', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'warning', autoHideDuration: 2000 });
+            //await DeleteProject(projectId);
+            //GetData();
         }
         catch (e) {
             enqueueSnackbar('Error occured', { anchorOrigin: { vertical: 'top', horizontal: 'center', }, variant: 'error', autoHideDuration: 2000 });

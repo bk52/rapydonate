@@ -40,13 +40,13 @@ const Main = () => {
         }
         GetData();
     }, [])
-    return <div className='w-screen h-screen flex flex-col bg-gray-100'>
-        <div className='flex flex-1'>
+    return <div className='w-screen h-screen flex flex-col items-center bg-gray-100'>
+        <div className='flex flex-1 w-full md:max-w-4xl bg-white'>
             {status.state === PAGE_STATES.LOADING && <Loading />}
             {status.state === PAGE_STATES.NOTFOUND && <NotFound />}
-            {status.state === PAGE_STATES.INFO && <Info project={project} />}
-            {status.state === PAGE_STATES.SETTINGS && <SettingsPage setCheckout={(info) => { setCheckoutInfo(info) }} onNavigate={(page) => setStatus({ state: page })} onSaveClick={() => { setStatus({ state: PAGE_STATES.INFO }) }} />}
-            {status.state === PAGE_STATES.PAYMENT && <PaymentPage projectInfo={project} checkoutInfo={checkoutInfo} GoHome={() => setStatus({ state: PAGE_STATES.INFO })} />}
+            {status.state === PAGE_STATES.INFO && <Info project={project} setCheckout={(info) => { setCheckoutInfo(info) }} onNavigate={(page) => setStatus({ state: page })} />}
+            {status.state === PAGE_STATES.SETTINGS && <SettingsPage onSaveClick={() => { setStatus({ state: PAGE_STATES.INFO }) }} />}
+            {status.state === PAGE_STATES.PAYMENT && <PaymentPage projectInfo={project} checkoutInfo={checkoutInfo} GoHome={() => window.location.reload()} />}
         </div>
         <Footer />
     </div>

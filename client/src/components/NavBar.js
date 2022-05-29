@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch } from 'react-redux';
 import { signOut } from "../redux/authSlice";
+import BKLogo from '../assets/img/BK.png';
 
 const NavBar = () => {
     const dispatch = useDispatch();
@@ -12,9 +13,9 @@ const NavBar = () => {
     return <div className="navBar">
         <a className="brand" href="#">Rapydonate</a>
         <div className="userInfo">
-            <span className="userName">Barış KARAMUSTAFA</span>
+            <span className="userName">Gamer King</span>
             <div className="dropdown">
-                <button className="dropbtn"><img src="https://gravatar.com/avatar/fb6e7c4ed7cff6da0151ceb18c911733?s=400&d=robohash&r=x" /></button>
+                <button className="dropbtn"><img src={BKLogo} /></button>
                 <div className="dropdown-content">
                     <a href="#" onClick={onLogout}>Logout</a>
                 </div>

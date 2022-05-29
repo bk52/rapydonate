@@ -15,7 +15,6 @@ const PAYMENT_STATUS = {
 const Payment = ({ checkoutInfo, projectInfo, GoHome }) => {
     const [loading, setLoading] = useState(true);
     const [paymentStatus, setPaymentStatus] = useState({ status: PAYMENT_STATUS.Active, message: '' })
-
     useEffect(() => {
         if (checkoutInfo?.checkoutId !== '') {
             try {

@@ -1,10 +1,15 @@
 
 export const SetSettings = (settings) => {
-    localStorage.setItem("rapydSettings", settings);
+    localStorage.setItem("rapydSettings", JSON.stringify(settings));
 }
 
 export const GetSettings = () => {
-    return localStorage.getItem("rapydSettings");
+    let settings = null;
+    const localData = localStorage.getItem("rapydSettings");
+    if (localData) {
+        settings = JSON.parse(localData);
+    }
+    return settings;
 }
 
 export const ClearSettings = () => {
