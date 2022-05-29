@@ -38,7 +38,8 @@ const Init = async () => {
         app.use(bodyParser.json());
         app.use(cors());
         app.use(mongoSanitize({ replaceWith: "_" }));
-        app.use(express.static(path.join(global.appRoot, "client/dist")));
+        app.use("/donate", express.static(path.join(global.appRoot, "donate/dist")));
+        app.use("/", express.static(path.join(global.appRoot, "client/dist")));
         app.use("/api/auth", authRouter);
         app.use("/api/token", tokenRouter);
         app.use("/api/test", authMiddleware(PERMISSIONS.ADMIN), testRouter);
@@ -49,6 +50,14 @@ const Init = async () => {
         app.use("/api/donations", apiKeyMiddleware, donationsRouter);
         app.use("/api/paymentmethods", apiKeyMiddleware, paymentMethodsRouter);
         app.use("/api/urls", apiKeyMiddleware, urlRouter);
+
+        app.get('/donate', function (req, res) {
+            res.sendFile(path.join(global.appRoot, "donate/dist/index.html"), function (err) {
+                if (err) {
+                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(ReasonPhrases.INTERNAL_SERVER_ERROR)
+                }
+            })
+        })
 
         app.get('*', function (req, res) {
             res.sendFile(path.join(global.appRoot, "client/dist/index.html"), function (err) {

@@ -83,6 +83,10 @@ projectsSchema.statics.getProjectByUrl = function (url) {
     return this.findOne({ "urls.url": url }, 'title description imageURL donationTypes').lean();
 }
 
+projectsSchema.statics.getProjectById = function (_id) {
+    return this.findOne({ _id }, 'title description imageURL donationTypes').lean();
+}
+
 const projectsModel = mongoose.model("projects", projectsSchema);
 module.exports = projectsModel;
 

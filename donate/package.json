@@ -1,0 +1,40 @@
+{
+  "name": "rapydonate-donate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack serve",
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-confetti": "^6.1.0",
+    "react-use": "^17.4.0"
+
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
+    "autoprefixer": "^10.4.7",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^5.0.1",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.4.2",
+    "postcss": "^8.4.14",
+    "postcss-cli": "^9.1.0",
+    "postcss-loader": "^7.0.0",
+    "style-loader": "^2.0.0",
+    "tailwindcss": "^3.0.24",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

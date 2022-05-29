@@ -9,15 +9,24 @@ router.route('/')
     })
     .post(async function (req, res) {
         try {
-            const { siteUrl } = req.body;
-            if (!siteUrl)
+            const { siteUrl, projectId } = req.body;
+            if (!(siteUrl || projectId))
                 return res.status(StatusCodes.BAD_REQUEST).json({ "message": ReasonPhrases.BAD_REQUEST });
 
-            const project = await ProjectModel.getProjectByUrl(siteUrl);
-            if (!project)
-                return res.status(StatusCodes.NOT_FOUND).json({ "message": ReasonPhrases.NOT_FOUND });
+            if (siteUrl) {
+                const project = await ProjectModel.getProjectByUrl(siteUrl);
+                if (!project)
+                    return res.status(StatusCodes.NOT_FOUND).json({ "message": ReasonPhrases.NOT_FOUND });
 
-            return res.status(StatusCodes.OK).json({ "message": ReasonPhrases.OK, project });
+                return res.status(StatusCodes.OK).json({ "message": ReasonPhrases.OK, project });
+            }
+            else if (projectId) {
+                const project = await ProjectModel.getProjectById(projectId);
+                if (!project)
+                    return res.status(StatusCodes.NOT_FOUND).json({ "message": ReasonPhrases.NOT_FOUND });
+
+                return res.status(StatusCodes.OK).json({ "message": ReasonPhrases.OK, project });
+            }
         }
         catch (e) {
             global.log(e);

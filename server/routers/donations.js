@@ -33,7 +33,7 @@ router.route('/')
             if (!project)
                 return res.status(StatusCodes.NOT_FOUND).json({ "message": ReasonPhrases.NOT_FOUND });
 
-            const platform = project.urls.filter(x => x.url === projectUrl)[0];
+            const platform = projectUrl === 'rapydonate' ? 'Rapydonate' : project.urls.filter(x => x.url === projectUrl)[0];
             const selectedDonate = project.donationTypes.filter(x => x._id.toString() === donateId)[0];
             const { _id, icon, title, price, donateType } = selectedDonate;
             const msg = donateType === "message" ? message : "";
