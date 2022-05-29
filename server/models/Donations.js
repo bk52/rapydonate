@@ -4,12 +4,16 @@ const { Schema } = mongoose;
 const donationSchema = new Schema(
     {
         ip: String,
-        first_name: String,
-        last_name: String,
-        message: String,
-        donateType: String,
         projectId: String,
-        userId: String
+        from: String,
+        fromId: String,
+        icon: String,
+        title: String,
+        price: Number,
+        donateType: String,
+        donateId: String,
+        username: String,
+        message: String
     },
     {
         timestamps: { createdAt: "createdDate", updatedAt: "updatedDate" },
@@ -18,10 +22,12 @@ const donationSchema = new Schema(
 )
 
 donationSchema.statics.getProjectDonates = function (projectId) {
-    return this.find({ projectId }).lean();
+    return this.find({ projectId }, 'ip from icon price donateType username message createdDate')
+        .sort([['createdDate', -1]])
+        .lean();
 }
 
-donationSchema.static.setDonate = async function (item) {
+donationSchema.statics.setDonate = async function (item) {
     let newItem = new DonateModel(item);
     const saveItem = await newItem.save();
     return saveItem

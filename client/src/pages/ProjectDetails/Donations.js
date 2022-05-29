@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Statistic, Icon, Table } from 'semantic-ui-react'
+import { Statistic, Icon, Table, Loader } from 'semantic-ui-react'
 import { PieChart, Pie, Cell, Sector, ResponsiveContainer } from 'recharts';
 import { DateTime } from "luxon";
 
@@ -54,25 +54,27 @@ const renderActiveShape = (props) => {
     );
 };
 
-const Donations = ({ settings }) => {
+const Donations = ({ donateList }) => {
     const [activeIndex, setActiveIndex] = useState(0);
-    const [dashboard, setDashboard] = useState([
-        { name: 'Group A', value: 400 },
-        { name: 'Group B', value: 300 },
-        { name: 'Group C', value: 300 },
-        { name: 'Group D', value: 200 },
-    ])
-    const [donates, setDonates] = useState([
-        {
-            _id: 1,
-            from: 'Youtube',
-            type: '📭',
-            name: 'Barış',
-            surname: 'Karamustafa',
-            message: 'Hello from Turkey 😎',
-            date: '2022-05-20T03:24:00'
-        }
-    ]);
+    const [dashboard, setDashboard] = useState([{ name: 'A', value: 500 }]);
+    const [sum, setSum] = useState(0);
+
+    useEffect(() => {
+        let dashData = [];
+        let _sum = 0;
+        donateList && donateList.map(item => {
+            const ind = dashData.findIndex(x => x.name == item.from);
+            if (ind > -1) {
+                dashData[ind].value = dashData[ind].value + item.price
+            }
+            else {
+                dashData.push({ name: item.from, value: item.price })
+            }
+            _sum += item.price;
+        })
+        setDashboard(dashData);
+        setSum(_sum)
+    }, [donateList])
 
     const onPieEnter = (_, index) => { setActiveIndex(index) };
 
@@ -97,41 +99,42 @@ const Donations = ({ settings }) => {
                     </Pie>
                 </PieChart>
             </ResponsiveContainer>
-
             <Statistic>
                 <Statistic.Value>
-                    <Icon name='dollar' />128.00
+                    <Icon name='dollar' />{new Intl.NumberFormat('en-IN').format(sum)}
                 </Statistic.Value>
                 <Statistic.Label>Total Donation</Statistic.Label>
             </Statistic>
         </div>
         <div style={{ flex: '2', paddingTop: '8px' }}>
-            <Table basic='very'>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell textAlign='center'>From</Table.HeaderCell>
-                        <Table.HeaderCell width={1} textAlign='center'>Type</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>Name</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>Surname</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>Message</Table.HeaderCell>
-                        <Table.HeaderCell width={2} textAlign='center'>Date</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
+            {
+                donateList ? <Table basic='very'>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell textAlign='center'>From</Table.HeaderCell>
+                            <Table.HeaderCell width={1} textAlign='center'>Type</Table.HeaderCell>
+                            <Table.HeaderCell textAlign='center'>IP</Table.HeaderCell>
+                            <Table.HeaderCell textAlign='center'>Username</Table.HeaderCell>
+                            <Table.HeaderCell textAlign='center'>Message</Table.HeaderCell>
+                            <Table.HeaderCell width={2} textAlign='center'>Date</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
 
-                <Table.Body>
-                    {
-                        donates && donates.map((item, ind) =>
-                            <Table.Row key={item._id}>
-                                <Table.Cell textAlign='center'>{item.from}</Table.Cell>
-                                <Table.Cell textAlign='center'>{item.type}</Table.Cell>
-                                <Table.Cell textAlign='center'>{item.name}</Table.Cell>
-                                <Table.Cell textAlign='center'>{item.surname}</Table.Cell>
-                                <Table.Cell textAlign='center'>{item.message}</Table.Cell>
-                                <Table.Cell textAlign='center'>{DateTime.fromMillis(new Date(item.date).getTime()).setLocale('en').toRelative()}</Table.Cell>
-                            </Table.Row>)
-                    }
-                </Table.Body>
-            </Table>
+                    <Table.Body>
+                        {
+                            donateList && donateList.map((item, ind) =>
+                                <Table.Row key={item._id}>
+                                    <Table.Cell textAlign='center'>{item.from}</Table.Cell>
+                                    <Table.Cell textAlign='center'>{item.icon}</Table.Cell>
+                                    <Table.Cell textAlign='center'>{item.ip}</Table.Cell>
+                                    <Table.Cell textAlign='center'>{item.username}</Table.Cell>
+                                    <Table.Cell textAlign='center'>{item.message}</Table.Cell>
+                                    <Table.Cell textAlign='center'>{DateTime.fromMillis(new Date(item.createdDate).getTime()).setLocale('en').toRelative()}</Table.Cell>
+                                </Table.Row>)
+                        }
+                    </Table.Body>
+                </Table> : <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}> <Loader active inline='centered' content='Loading' size={'large'} /></div>
+            }
         </div>
     </div>
 }

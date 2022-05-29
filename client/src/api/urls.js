@@ -7,7 +7,8 @@ const URL = {
   LOGAPI: "/trackLogs",
   COUNTRIES: '/countries',
   ACCOUNT: '/account',
-  PROJECT: '/projects'
+  PROJECT: '/projects',
+  DONATION: '/donations'
 };
 
 export default URL;

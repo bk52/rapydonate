@@ -6,6 +6,7 @@ import Projects from './Projects';
 import ProjectsDetails from './ProjectDetails';
 import NotFound from "./NotFound";
 import Account from "./Account";
+import Info from "./Info";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectLogin, setLogin } from "../redux/authSlice";
@@ -47,6 +48,7 @@ export default function App() {
               <Route path="/account" element={<RequireAuth><Account /></RequireAuth>} />
               <Route path="/projects" element={<RequireAuth><Projects /></RequireAuth>} />
               <Route path="/projects/:id" element={<RequireAuth><ProjectsDetails /></RequireAuth>} />
+              <Route path="/info/:id" element={<Info />} />
               <Route path='*' element={<NotFound />} />
             </Routes>
           </div>
