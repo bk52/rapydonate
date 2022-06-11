@@ -26,7 +26,7 @@ const Login = () => {
         }),
         onSubmit: async (values) => {
             try {
-                const encPass = Encryption(values.password, "B2A58CC631F61199")
+                const encPass = Encryption(values.password, "23A45BC678D90123")
                 setLoading(true);
                 await dispatch(fetchSignIn({ username: values.email, password: encPass })).unwrap();
                 navigate("/projects", { replace: true })
