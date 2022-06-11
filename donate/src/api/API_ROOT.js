@@ -14,6 +14,6 @@ export const api = axios.create({
     headers: {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
-        "apikey": "ZM86vZa8Vl",
+        "apikey": "123456",
     },
 });
