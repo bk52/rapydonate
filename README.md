@@ -4,11 +4,10 @@
 
 Rapydonate is a platform-independent fintech project that provides content creators with income. It consists of project management panel, browser extension and donation page components. 
 
-Content creators create projects through the Rapydonate administration panel. Within the project, they define social media links and determine donation amounts. A wallet is automatically created in the background for the content creators.
-
 ## Table of Contents
   - [Inspiration](#inspiration)
   - [How It Works?](#howitworks)
+  - [Installation](#installation)
 
 <h2 id="inspiration">Inspiration</h2>
 
@@ -37,4 +36,59 @@ Today, people produce educational, entertainment and news content for social med
 
 <h2 id="howitworks">How It Works?</h2>
 
+Content creators create projects through the Rapydonate administration panel. Within the project, they define social media links and determine donation amounts. A wallet is automatically created in the background for the content creators on [Rapyd](https://www.rapyd.net/).
 
+![Login Page](https://user-images.githubusercontent.com/24523985/173189820-ad58776f-bb22-4215-b3ac-03354a783826.jpg)
+
+Content producers can also follow incoming donations on this platform.
+
+![Rapydonate Panel](https://user-images.githubusercontent.com/24523985/173189968-ca4b7e0a-6502-43d9-a884-39e7c0df5571.jpg)
+
+By installing the [browser extension](https://github.com/bk52/rapydonate-extension), users can easily donate without logging in or sharing personal data. 
+
+![Chrome Extension](https://user-images.githubusercontent.com/24523985/173190083-30340ef5-eb86-4a20-b4bf-c495bcd7b16a.jpg)
+
+For extension details please [visit](https://github.com/bk52/rapydonate-extension).
+
+Rapydonate also creates a project page for donation. Browsers and mobile devices that do not support the extension can be directed to this page to collect donations.
+
+![Donate Page](https://user-images.githubusercontent.com/24523985/173190174-6313d34b-df72-47e3-8bf8-24d4511e4108.jpg)
+
+<h2 id='installation'>Installation</h2>
+
+1. Clone repository
+
+- git clone https://github.com/bk52/rapydonate
+
+2. Server installation
+- Create .env file in server folder and define parameters in below
+
+PORT=9600
+
+ACCESS_TOKEN_SECRET=Abc01dEfgH
+
+ACCESS_TOKEN_LIFE=86400
+
+REFRESH_TOKEN_SECRET=abc012defgh34ijklmnprstuvyzxabcd5e
+
+REFRESH_TOKEN_LIFE=86400
+
+DB_USERNAME=**MONGODB USERNAME**
+
+DB_PASSWORD=**MONGODB PASSWORD**
+
+DB_NAME=rapydonate
+
+AES_DB_KEY=012A3B45C67DE8FG
+
+AES_API_KEY=23A45BC678D90123
+
+API_HEADER_KEY=123456
+
+RAPYD_ACCESS_KEY=**RAPYD ACCESS KEY**
+
+RAPYD_SECRET_KEY=**RAPYD SECRET KEY**
+
+3. Return to home folder
+
+- npm run start
